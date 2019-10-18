@@ -1,0 +1,26 @@
+<div class="bg-dark text-white p-2">
+    <div class="navbar-brand">SPORTS STORE</div>
+</div>
+
+<h2 class="text-center m-1">Summary</h2>
+
+<div class="container">
+    <table class="table m-2">
+        <tr><th>Name</th><td>{{order.name}}</td></tr>
+        <tr><th>Address</th><td>{{order.address}}</td></tr>
+        <tr><th>Products</th><td>{{order.cart.itemCount}}</td></tr>
+        <tr>
+            <th>Total Price</th>
+            <td>{{order.cart.totalPrice | currency:"USD":"symbol" }}</td>
+        </tr>
+    </table>
+    <div class="text-center pt-2">
+        <button type="button" class="btn btn-outline-primary m-1"
+                routerLink="/checkout/step2">
+            Back
+        </button>
+        <button type="button" class="btn btn-danger m-1" (click)="submitOrder()">
+            Place Order
+        </button>
+    </div>
+</div>

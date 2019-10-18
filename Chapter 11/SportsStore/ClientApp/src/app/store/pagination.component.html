@@ -1,0 +1,8 @@
+<div *ngIf="pages.length > 1" class="text-right my-2">
+    <button *ngFor="let page of pages"
+            class="btn btn-outline-primary mx-1"
+            [class.active]="navigation.currentPage == page"
+            (click)="navigation.currentPage = page">
+        {{page}}
+    </button>
+</div>

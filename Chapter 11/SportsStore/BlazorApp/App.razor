@@ -1,0 +1,47 @@
+﻿@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<div class="p-2 bg-info text-white">
+    <EditForm Model="@search" OnValidSubmit="@HandleSearch" class="form-inline">
+        <InputText class="form-control" @bind-Value="@search.searchTerm" 
+            placeholder="Enter search term" />
+        <button type="submit" class="btn btn-primary m-1">Search</button>
+        <span class="ml-3">@results</span>
+    </EditForm>            
+</div>
+
+@code {
+    SearchSettings search = new SearchSettings();
+    string results = "No results to display";
+    
+        protected override void OnAfterRender(bool firstRender) {
+        JSRuntime.InvokeAsync<object>("angular_receiveReference", 
+            DotNetObjectReference.Create(this));  
+    }
+
+    async void HandleSearch() {
+        if (search.searchTerm != String.Empty) {
+            Product[] prods = 
+                await JSRuntime.InvokeAsync<Product[]>("angular_searchProducts", 
+                    search.searchTerm);
+            decimal totalPrice = prods.Select(p => p.Price).Sum();
+            results = $"{ prods.Length } products, total price is ${ totalPrice }";
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public void resetSearch(string message) {
+        search.searchTerm = "";
+        results = message;
+        StateHasChanged();
+    }
+
+    class Product {
+        public decimal Price {get; set; }
+    }
+
+    class SearchSettings { 
+        public string searchTerm;
+    }
+}
